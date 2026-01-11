@@ -9,7 +9,7 @@ This comprehensive guide walks you through creating a Python Flask application, 
 3. [Step 2: Set Up Project Structure](#step-2-set-up-project-structure)
 4. [Step 3: Containerize with Docker](#step-3-containerize-with-docker)
 5. [Step 4: Set Up GitHub Repository](#step-4-set-up-github-repository)
-6. [Step 5: Configure GitHub Actions CI/CD](#step-5-configure-github-actions-cicd)
+6. [Step 5: Set Up GitHub Repository for CI/CD](#step-5-set-up-github-repository-for-cicd)
 7. [Step 6: Deploy to Azure App Service](#step-6-deploy-to-azure-app-service)
 8. [Step 7: Set Up Continuous Deployment](#step-7-set-up-continuous-deployment)
 9. [Step 8: Test the Deployment](#step-8-test-the-deployment)
