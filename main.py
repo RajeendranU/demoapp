@@ -5,7 +5,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return jsonify({
-        'message': 'Hello, World!',
+        'message': 'Hello from Azure! Automatic deployment works!',
         'status': 'success'
     })
 
