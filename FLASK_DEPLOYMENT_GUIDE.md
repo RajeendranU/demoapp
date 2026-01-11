@@ -329,106 +329,17 @@ Replace `YOUR_USERNAME` with your GitHub username.
 
 ---
 
-## Step 5: Configure GitHub Actions CI/CD
+## Step 5: Set Up GitHub Repository for CI/CD
 
-### 5.1 Create Workflow Directory
+**Note:** The GitHub Actions workflow will be automatically created by Azure when you set up continuous deployment in Step 7. You don't need to create it manually.
 
-```bash
-mkdir -p .github/workflows
-```
-
-### 5.2 Create CI/CD Workflow
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-cov
-    
-    - name: Run tests
-      run: |
-        export PYTHONPATH=$PYTHONPATH:$(pwd)
-        pytest tests/ -v || echo "Tests completed"
-    
-    - name: Lint with flake8
-      run: |
-        pip install flake8
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "Linting skipped"
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    
-    - name: Build Docker image
-      run: |
-        docker build -t flask-app:test .
-    
-    - name: Test Docker image
-      run: |
-        docker run -d -p 5000:5000 --name flask-test flask-app:test
-        sleep 10
-        curl -f http://localhost:5000/health || exit 1
-        docker stop flask-test
-        docker rm flask-test
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    
-    - name: Build and push Docker image
-      run: |
-        docker build -t flask-app:${{ github.sha }} .
-        # docker tag flask-app:${{ github.sha }} your-dockerhub-username/flask-app:latest
-        # docker push your-dockerhub-username/flask-app:latest
-    
-    - name: Deploy to server (example)
-      run: |
-        echo "Deployment steps would go here"
-```
-
-### 5.3 Commit and Push Workflow
+For now, just ensure your code is pushed to GitHub:
 
 ```bash
-git add .github/workflows/deploy.yml
-git commit -m "Add GitHub Actions CI/CD workflow"
+git add .
+git commit -m "Initial Flask app setup"
 git push
 ```
-
-### 5.4 Verify Workflow
-
-1. Go to your GitHub repository
-2. Click the **Actions** tab
-3. You should see the workflow running
-4. Wait for it to complete (should show green checkmark)
 
 ---
 
@@ -558,9 +469,36 @@ This will output JSON credentials. **Copy the entire JSON output.**
 5. Value: Paste the entire JSON from step 7.1
 6. Click **Add secret**
 
-### 7.3 Update Workflow for Azure Deployment
+### 7.3 Set Up Continuous Deployment in Azure Portal
 
-Create or update `.github/workflows/main_flask-app1.yml`:
+Azure will automatically create the GitHub Actions workflow file for you:
+
+1. Go to [Azure Portal](https://portal.azure.com)
+2. Navigate to your App Service
+3. Click **Deployment Center** (in the left menu)
+4. In the **Settings** tab:
+   - **Source**: Select **GitHub**
+   - **Organization**: Select your GitHub organization/user
+   - **Repository**: Select your repository (e.g., `flask-app`)
+   - **Branch**: Select `main`
+   - **Build provider**: Select **GitHub Actions**
+   - Click **Save**
+
+Azure will create a workflow file (typically `.github/workflows/main_YOUR_APP_NAME.yml`) in your repository automatically.
+
+### 7.4 Pull the Azure-Created Workflow
+
+Pull the workflow file that Azure created:
+
+```bash
+git pull origin main
+```
+
+You should now see a workflow file like `.github/workflows/main_flask-app1.yml` (the exact name depends on your app name).
+
+### 7.5 Update Workflow with Service Principal
+
+Edit the Azure-created workflow file (e.g., `.github/workflows/main_flask-app1.yml`) and update it:
 
 ```yaml
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
@@ -629,15 +567,56 @@ jobs:
 
 **Important:** Replace `YOUR_APP_NAME` with your actual Azure App Service name.
 
-### 7.4 Commit and Push
+**Key changes to make:**
+1. Replace the OIDC authentication (lines with `client-id`, `tenant-id`, `subscription-id`) with:
+   ```yaml
+   - name: Login to Azure
+     uses: azure/login@v2
+     with:
+       creds: ${{ secrets.AZURE_CREDENTIALS }}
+   ```
+2. Remove the `permissions` block from the deploy job (not needed with service principal)
+3. Ensure `startup-command: 'gunicorn --bind=0.0.0.0:8000 main:app'` is included
+4. Verify the `app-name` matches your Azure App Service name
+
+**Complete updated deploy section should look like:**
+
+```yaml
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: python-app
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        id: deploy-to-webapp
+        with:
+          app-name: 'YOUR_APP_NAME'
+          slot-name: 'Production'
+          startup-command: 'gunicorn --bind=0.0.0.0:8000 main:app'
+```
+
+**Important:** Replace `YOUR_APP_NAME` with your actual Azure App Service name.
+
+### 7.6 Commit and Push Updated Workflow
 
 ```bash
 git add .github/workflows/
-git commit -m "Add Azure deployment workflow"
+git commit -m "Update Azure deployment workflow to use service principal"
 git push
 ```
 
-### 7.5 Verify Continuous Deployment
+### 7.7 Verify Continuous Deployment
 
 1. Go to GitHub → **Actions** tab
 2. You should see the workflow running
