@@ -397,25 +397,31 @@ If there are port errors, explain:
 
 1. **Prompt 1:** Create Flask App with Products
 2. **Prompt 2:** Create All CI/CD Files
-3. **Prompt 3:** Test Flask App Locally
-4. **Prompt 4:** Create Dockerfile
-5. **Prompt 5:** Create .dockerignore
-6. **Prompt 6:** Build and Test Docker
-7. **Prompt 7:** 🚀 **MCP** - Create GitHub Repository and Push Files
-8. **Prompt 8:** 🚀 **MCP** - Verify GitHub Setup
-9. **Prompt 9:** Create Azure Resources
-10. **Prompt 10:** Deploy and Configure Azure App
-11. **Prompt 11:** Create Azure Service Principal
-12. **Prompt 12:** Add GitHub Secret (Manual - GitHub UI)
-13. **Prompt 13:** Set Up Azure Deployment Center (Manual - Azure Portal)
-14. **Prompt 14:** 🚀 **MCP** - Get Azure-Created Workflow
-15. **Prompt 15:** Update Workflow with Service Principal
-16. **Prompt 16:** 🚀 **MCP** - Update and Push Workflow
-17. **Prompt 17:** 🚀 **MCP** - Verify Continuous Deployment
-18. **Prompt 18:** 🚀 **MCP** - Test Automatic Deployment
-19. **Prompt 19:** Verify Deployment Success
+3. **Prompt 3:** Test Flask App Locally (Shows commands)
+4. **Prompt 3a:** ⚡ **Execute** - Run Local Testing Commands
+5. **Prompt 4:** Create Dockerfile
+6. **Prompt 5:** Create .dockerignore
+7. **Prompt 6:** Build and Test Docker (Shows commands)
+8. **Prompt 6a:** ⚡ **Execute** - Run Docker Build and Test Commands
+9. **Prompt 7:** 🚀 **MCP** - Create GitHub Repository and Push Files
+10. **Prompt 8:** 🚀 **MCP** - Verify GitHub Setup
+11. **Prompt 9:** Create Azure Resources (Shows commands)
+12. **Prompt 9a:** ⚡ **Execute** - Run Azure Resource Creation Commands
+13. **Prompt 10:** Deploy and Configure Azure App (Shows steps)
+14. **Prompt 10a:** ⚡ **Execute** - Run Azure Deployment Commands
+15. **Prompt 11:** Create Azure Service Principal (Shows commands)
+16. **Prompt 11a:** ⚡ **Execute** - Run Service Principal Creation Commands
+17. **Prompt 12:** Add GitHub Secret (Manual - GitHub UI)
+18. **Prompt 13:** Set Up Azure Deployment Center (Manual - Azure Portal)
+19. **Prompt 14:** 🚀 **MCP** - Get Azure-Created Workflow
+20. **Prompt 15:** Update Workflow with Service Principal
+21. **Prompt 16:** 🚀 **MCP** - Update and Push Workflow
+22. **Prompt 17:** 🚀 **MCP** - Verify Continuous Deployment
+23. **Prompt 18:** 🚀 **MCP** - Test Automatic Deployment
+24. **Prompt 19:** Verify Deployment Success
 
-**🚀 = Uses MCP GitHub tools for automation**
+**🚀 = Uses MCP GitHub tools for automation**  
+**⚡ = Execution prompt - runs the commands**
 
 **Troubleshooting (use as needed):**
 20. Docker Build Issues
