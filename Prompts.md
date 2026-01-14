@@ -4,6 +4,13 @@ Follow these prompts in Cursor one by one to deploy a Flask app with products (T
 
 **This guide uses MCP (Model Context Protocol) GitHub tools to automate GitHub operations!**
 
+**Prompt Pattern:**
+- **Regular prompts** (e.g., Prompt 3, 6, 9, 11): Show commands and explain steps
+- **Execution prompts** (e.g., Prompt 3a, 6a, 9a, 11a): ⚡ Actually execute the commands
+- **MCP prompts** (🚀): Use MCP tools for automated operations
+
+**Workflow:** First see the commands → Then execute them → Then verify results
+
 ---
 
 ## **MCP GitHub Automation**
@@ -82,6 +89,16 @@ Show me the commands to:
 5. Test the endpoints: /, /health, /products, /products/tv
 ```
 
+### **Prompt 3a: Execute Local Testing**
+```
+Now execute these commands:
+1. Create and activate the virtual environment
+2. Install dependencies from requirements.txt
+3. Run the Flask app
+4. Verify it's running on http://localhost:5000
+Execute all commands and confirm the app is working.
+```
+
 ---
 
 ## **Step 4: Containerize with Docker**
@@ -117,6 +134,16 @@ Show me the Docker commands to:
 4. Run the container in background
 5. View logs
 6. Stop and remove the container
+```
+
+### **Prompt 6a: Execute Docker Build and Test**
+```
+Now execute these Docker commands:
+1. Build the Docker image with tag flask-app
+2. Run the container and test it
+3. Verify all endpoints work: /, /health, /products, /products/tv
+4. Stop the container when done
+Execute all commands and confirm Docker container is working.
 ```
 
 ---
@@ -169,6 +196,17 @@ Show me the Azure CLI commands to:
 5. List the created web app to verify
 ```
 
+### **Prompt 9a: Execute Azure Resource Creation**
+```
+Now execute these Azure CLI commands:
+1. Login to Azure (use az login)
+2. Create the resource group flask-rg in eastus
+3. Create the App Service plan flask-plan with B1 SKU for Linux
+4. Create the web app with a unique name and Python 3.11 runtime
+5. Verify all resources were created successfully
+Execute all commands and confirm Azure resources are created.
+```
+
 ### **Prompt 10: Deploy and Configure Azure App**
 ```
 After creating the Azure App Service, I need to:
@@ -176,6 +214,16 @@ After creating the Azure App Service, I need to:
 2. Configure the startup command in Azure Portal to: gunicorn --bind=0.0.0.0:8000 main:app
 3. Verify the deployment by visiting the app URL
 Explain how to do all three steps with exact commands and portal navigation.
+```
+
+### **Prompt 10a: Execute Azure Deployment**
+```
+Now execute the deployment:
+1. Run: az webapp up --resource-group flask-rg --name YOUR_APP_NAME
+2. Configure startup command in Azure Portal (navigate and set it)
+3. Verify deployment by visiting the app URL
+4. Test all endpoints: /, /health, /products, /products/tv
+Execute the deployment and confirm the app is live on Azure.
 ```
 
 ---
@@ -191,6 +239,17 @@ Show me the Azure CLI commands to:
 4. Create a service principal named "github-actions-flask-deploy" with contributor role scoped to my App Service
 The command should output JSON credentials in SDK auth format.
 Make sure to use the actual values from steps 1-3 in the command.
+```
+
+### **Prompt 11a: Execute Service Principal Creation**
+```
+Now execute these Azure CLI commands:
+1. Get subscription ID using: az account show --query id -o tsv
+2. Get resource group name using: az group list --query "[].name" -o tsv
+3. Get web app name using: az webapp list --query "[].name" -o tsv
+4. Create the service principal with the actual values from steps 1-3
+5. Save the JSON output - we'll need it for GitHub secrets
+Execute all commands and display the service principal JSON credentials.
 ```
 
 ### **Prompt 12: Add GitHub Secret**
@@ -414,7 +473,12 @@ These prompts will guide you through:
 ✅ Setting up CI/CD with GitHub Actions
 ✅ Testing automatic deployment
 
-**Total Prompts:** 19 main prompts + 5 troubleshooting prompts = 24 prompts
+**Total Prompts:** 19 main prompts + 4 execution prompts + 5 troubleshooting prompts = 28 prompts
+
+**Prompt Types:**
+- **Regular prompts:** Create files, show commands, explain steps
+- **Execution prompts (⚡):** Actually run the commands
+- **MCP prompts (🚀):** Use MCP tools for automation
 
 **MCP Automation Benefits:**
 - ✅ No manual git commands needed
